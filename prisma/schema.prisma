@@ -1,0 +1,29 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider             = "prisma-client-py"
+  recursive_type_depth = -1
+}
+
+model User {
+  id                 String       @id @default(cuid())
+  token              String?      @unique
+  last_login         DateTime     @default(now())
+  username           String       @unique
+  password           String
+  discord_id         String?      @unique
+  discord_sync_token String?      @unique
+  coding_games_id    String?      @unique
+  tournaments        Tournament[]
+}
+
+model Tournament {
+  id          String   @id @default(cuid())
+  name        String
+  description String   @db.Text
+  start_date  DateTime
+  users       User[]
+}
